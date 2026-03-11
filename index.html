@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intenções - Perpétuo Socorro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        .header-img {
+            width: 160px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #d4af37;
+        }
+        h2 { color: #1a2a6c; margin: 0 0 5px 0; }
+        p { color: #555; font-size: 14px; margin-bottom: 20px; }
+        
+        label { display: block; text-align: left; font-weight: bold; margin: 10px 0 5px; color: #333; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .opcional { font-weight: normal; color: #888; font-size: 12px; }
+        textarea { resize: none; height: 80px; }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background-color: #25d366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #128c7e; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Our_Holy_Mother_Of_Perpetual_Succour.jpg" alt="Nossa Senhora do Perpétuo Socorro" class="header-img">
+    
+    <h2>Intenções de Missa</h2>
+    <p>Paróquia Nossa Senhora do Perpétuo Socorro</p>
+
+    <label>Seu Nome:</label>
+    <input type="text" id="nome" placeholder="Ex: João Silva">
+
+    <label>Sua Cidade: <span class="opcional">(Opcional)</span></label>
+    <input type="text" id="cidade" placeholder="Ex: Mirabela - MG">
+
+    <label>Data da Missa:</label>
+    <input type="date" id="dataMissa">
+
+    <label>Tipo de Intenção:</label>
+    <select id="tipo">
+        <option value="Ação de Graças">Ação de Graças</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Aniversário">Aniversário</option>
+        <option value="Sétimo Dia">Sétimo Dia</option>
+        <option value="Falecimento">Falecimento</option>
+        <option value="Outros">Outros</option>
+    </select>
+
+    <label>Descreva sua Intenção:</label>
+    <textarea id="mensagem" placeholder="Nomes para oração ou motivo..."></textarea>
+
+    <button onclick="enviarZap()">Enviar para o WhatsApp</button>
+</div>
+
+<script>
+    function enviarZap() {
+        // Pega os dados dos campos
+        const nome = document.getElementById('nome').value;
+        const cidade = document.getElementById('cidade').value || "Não informada";
+        const data = document.getElementById('dataMissa').value;
+        const tipo = document.getElementById('tipo').value;
+        const msg = document.getElementById('mensagem').value;
+        
+        // Número da Paróquia (AJUSTE AQUI SE PRECISAR)
+        const numeroTelefone = "(38) 984217533"; 
+
+        // Validação simples
+        if(!nome || !msg || !data) {
+            alert("Por favor, preencha o nome, a data e a intenção!");
+            return;
+        }
+
+        // Formata a data para o padrão Brasil
+        const dataFormatada = data.split('-').reverse().join('/');
+
+        // Monta a mensagem para o WhatsApp
+        const textoFinal = `*NOVA INTENÇÃO DE MISSA*\n\n` +
+                           `*De:* ${nome}\n` +
+                           `*Cidade:* ${cidade}\n` +
+                           `*Data:* ${dataFormatada}\n` +
+                           `*Tipo:* ${tipo}\n` +
+                           `*Intenção:* ${msg}`;
+
+        // Cria o link do WhatsApp
+        const url = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(textoFinal)}`;
+        
+        // Abre em uma nova aba
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
