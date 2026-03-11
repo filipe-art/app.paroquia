@@ -3,100 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intenções - Paróquia Mirabela</title>
+    <title>Intenções - Perpétuo Socorro</title>
     <style>
-        :root { --primary: #1a2a6c; --gold: #d4af37; --success: #25d366; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
-        .card { background: white; border-radius: 24px; padding: 30px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; }
-        .santa-img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 15px; }
-        h2 { color: var(--primary); margin: 0; }
-        .form-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; }
-        .btn-enviar { width: 100%; padding: 16px; background: var(--success); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 17px; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        .header-img {
+            width: 160px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #d4af37;
+        }
+        h2 { color: #1a2a6c; margin: 0 0 5px 0; }
+        p { color: #555; font-size: 14px; margin-bottom: 20px; }
+        
+        label { display: block; text-align: left; font-weight: bold; margin: 10px 0 5px; color: #333; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .opcional { font-weight: normal; color: #888; font-size: 12px; }
+        textarea { resize: none; height: 80px; }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background-color: #25d366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #128c7e; transform: scale(1.02); }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <img src="https://a12-v2.s3.amazonaws.com/size/800/600/624c96576856a319089772.jpg" class="santa-img">
+<div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Our_Holy_Mother_Of_Perpetual_Succour.jpg" alt="Nossa Senhora do Perpétuo Socorro" class="header-img">
+    
     <h2>Intenções de Missa</h2>
-    <p style="font-size: 13px; color: #666;">Os dados serão salvos e enviados via WhatsApp</p>
+    <p>Paróquia Nossa Senhora do Perpétuo Socorro</p>
 
-    <div class="form-group">
-        <label>Nome Completo</label>
-        <input type="text" id="nome">
-    </div>
-    <div class="form-group">
-        <label>Data da Missa</label>
-        <input type="date" id="data">
-    </div>
-    <div class="form-group">
-        <label>Tipo</label>
-        <select id="tipo">
-            <option value="Ação de Graças">Ação de Graças</option>
-            <option value="Saúde">Saúde</option>
-            <option value="Falecimento">Falecimento</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Intenção</label>
-        <textarea id="msg"></textarea>
-    </div>
+    <label>Seu Nome:</label>
+    <input type="text" id="nome" placeholder="Ex: João Silva">
 
-    <button class="btn-enviar" onclick="enviarTudo()">Salvar e Enviar</button>
+    <label>Sua Cidade: <span class="opcional">(Opcional)</span></label>
+    <input type="text" id="cidade" placeholder="Ex: Mirabela - MG">
+
+    <label>Data da Missa:</label>
+    <input type="date" id="dataMissa">
+
+    <label>Tipo de Intenção:</label>
+    <select id="tipo">
+        <option value="Ação de Graças">Ação de Graças</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Aniversário">Aniversário</option>
+        <option value="Sétimo Dia">Sétimo Dia</option>
+        <option value="Falecimento">Falecimento</option>
+        <option value="Outros">Outros</option>
+    </select>
+
+    <label>Descreva sua Intenção:</label>
+    <textarea id="mensagem" placeholder="Nomes para oração ou motivo..."></textarea>
+
+    <button onclick="enviarZap()">Enviar para o WhatsApp</button>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
-
 <script>
-    // Sua configuração que você pegou
-    const firebaseConfig = {
-        apiKey: "AIzaSyDynzHC4K9rW_iINctRitOcQnRggQq15t8",
-        authDomain: "paroquia-dados.firebaseapp.com",
-        projectId: "paroquia-dados",
-        databaseURL: "https://paroquia-dados-default-rtdb.firebaseio.com", // Adicionei o link padrão do banco
-        storageBucket: "paroquia-dados.firebasestorage.app",
-        messagingSenderId: "922424205454",
-        appId: "1:922424205454:web:25aba7f2b73ec7cbde29df"
-    };
-
-    // Inicializa o Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    function enviarTudo() {
+    function enviarZap() {
+        // Pega os dados dos campos
         const nome = document.getElementById('nome').value;
-        const data = document.getElementById('data').value;
+        const cidade = document.getElementById('cidade').value || "Não informada";
+        const data = document.getElementById('dataMissa').value;
         const tipo = document.getElementById('tipo').value;
-        const msg = document.getElementById('msg').value;
+        const msg = document.getElementById('mensagem').value;
+        
+        // Número da Paróquia (AJUSTE AQUI SE PRECISAR)
+        const numeroTelefone = "5533991594560"; 
 
-        if(!nome || !data || !msg) {
-            alert("Preencha tudo, futuro Dev!");
+        // Validação simples
+        if(!nome || !msg || !data) {
+            alert("Por favor, preencha o nome, a data e a intenção!");
             return;
         }
 
-        // 1. SALVAR NO FIREBASE
-        const novaIntencao = database.ref('intencoes').push();
-        novaIntencao.set({
-            nome: nome,
-            data: data,
-            tipo: tipo,
-            mensagem: msg,
-            horaRegistro: new Date().toLocaleString()
-        }, (error) => {
-            if (error) {
-                alert("Erro ao salvar no banco!");
-            } else {
-                // 2. SE SALVOU, ABRE O WHATSAPP
-                const dataBr = data.split('-').reverse().join('/');
-                const texto = `*NOVA INTENÇÃO SALVA*\n\n*Nome:* ${nome}\n*Data:* ${dataBr}\n*Tipo:* ${tipo}\n*Mensagem:* ${msg}`;
-                const zapUrl = `https://api.whatsapp.com/send?phone=5533991594560&text=${encodeURIComponent(texto)}`;
-                
-                window.open(zapUrl, '_blank');
-            }
-        });
+        // Formata a data para o padrão Brasil
+        const dataFormatada = data.split('-').reverse().join('/');
+
+        // Monta a mensagem para o WhatsApp
+        const textoFinal = `*NOVA INTENÇÃO DE MISSA*\n\n` +
+                           `*De:* ${nome}\n` +
+                           `*Cidade:* ${cidade}\n` +
+                           `*Data:* ${dataFormatada}\n` +
+                           `*Tipo:* ${tipo}\n` +
+                           `*Intenção:* ${msg}`;
+
+        // Cria o link do WhatsApp
+        const url = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(textoFinal)}`;
+        
+        // Abre em uma nova aba
+        window.open(url, '_blank');
     }
 </script>
 
